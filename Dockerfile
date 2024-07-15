@@ -1,56 +1,28 @@
-#https://docs.docker.com/reference/dockerfile/   READ PLEASE
-# dockerfile consists of 2 import things.
-# 1. Comment 
-# 2. Directive
- 
-#Download ubuntu 20.04
-FROM    ubuntu:20.04
+# Use a base image with necessary dependencies
 
-# Give label for your docker file 
-LABEL   description="sharedtools" \
-        maintainer="jad omar"
+FROM ubuntu:20.04
+# Set environment variables
 
-# install telnet     
-RUN     DEBIAN_FRONTEND=noninteractive  apt-get update -y                   
-        
-RUN     apk add --no-cache \
-        curl \
-        unzip \
-        bash \
-        openrc \
-        telnet \
-        elinks
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Define versions
-ARG TERRAFORM_VERSION=1.1.1
-ARG PACKER_VERSION=1.8.0
+# Update and install required tools
+RUN apt-get update && \
+    apt-get install -y wget unzip curl telnet elinks && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Terraform
-RUN curl -sSL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o /tmp/terraform.zip && \
-unzip /tmp/terraform.zip -d /usr/local/bin && \
-rm /tmp/terraform.zip
+RUN wget https://releases.hashicorp.com/terraform/1.1.1/terraform_1.1.1_linux_amd64.zip && \
+    unzip terraform_1.1.1_linux_amd64.zip && \
+    mv terraform /usr/local/bin/ && \
+    rm terraform_1.1.1_linux_amd64.zip
 
 # Install Packer
-RUN curl -sSL https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip -o /tmp/packer.zip && \
-unzip /tmp/packer.zip -d /usr/local/bin && \
-rm /tmp/packer.zip
 
-# Verify installations
-RUN terraform --version && \
-packer --version && \
-telnet -help && \
-elinks --version
-        
+RUN wget https://releases.hashicorp.com/packer/1.7.10/packer_1.7.10_linux_amd64.zip && \
+    unzip packer_1.7.10_linux_amd64.zip && \
+    mv packer /usr/local/bin/ && \
+    rm packer_1.7.10_linux_amd64.zip
 
+# Command to keep the container running
 
-
-# Open port 80 on container
-EXPOSE 80
-
-
-#copy 
-COPY index.html /var/www/html
-
-
-# Run command 
-CMD ["apache2ctl", "-D", "FOREGROUND"]
+CMD ["tail", "-f", "/dev/null"]
