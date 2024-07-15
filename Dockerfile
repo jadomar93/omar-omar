@@ -7,7 +7,7 @@
 FROM    ubuntu:20.04
 
 # Give label for your docker file 
-LABEL   description="This is my first image" \
+LABEL   description="sharedtools" \
         maintainer="jad omar"
 
 # install telnet     
@@ -15,7 +15,7 @@ RUN     DEBIAN_FRONTEND=noninteractive  apt-get update -y                &&  \
         DEBIAN_FRONTEND=noninteractive  apt-get install telnet -y        &&  \
         DEBIAN_FRONTEND=noninteractive  apt-get install.sh               &&  \
         DEBIAN_FRONTEND=noninteractive  apt-get terraform 1.1.1          &&  \
-        
+
 
 
 
