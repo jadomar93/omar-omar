@@ -12,18 +12,18 @@ LABEL   description="sharedtools" \
 
 # install telnet     
 RUN     DEBIAN_FRONTEND=noninteractive  apt-get update -y                &&  \   
-        DEBIAN_FRONTEND=noninteractive  apt-get install telnet -y        &&  \
-        DEBIAN_FRONTEND=noninteractive  apt-get install.sh               &&  \
-        DEBIAN_FRONTEND=noninteractive  apt-get terraform 1.1.1          &&  \
-
+        
+        
 
 
 
 # Open port 80 on container
 EXPOSE 80
 
-# copy file content
+
+#copy 
 COPY index.html /var/www/html
+
 
 # Run command 
 CMD ["apache2ctl", "-D", "FOREGROUND"]
